@@ -1,0 +1,72 @@
+pipeline {
+    agent any
+    environment {
+        DOCKER_REPOUSER=credentials('docker-user')
+        DOCKER_IMAGE=credentials('docker-image')
+        IMAGE_TAG=credentials('image-tag')
+    }
+    stages {
+        stage('Cleanup Workspace') {
+            steps {
+                cleanWs()
+            }
+        }
+        stage('Source Pull') {
+            steps {
+                checkout changelog: false, 
+                poll: false, 
+                scm: scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/beatenstratblues/apex_email_verifier_backend']])
+            }
+        }
+        stage('BUILD: Install Dependencies') {
+            steps {
+                echo 'Installing dependencies using npm ci...'
+                sh 'NODE_OPTIONS="--max-old-space-size=4096" npm ci'
+            }
+        }
+        stage('TEST: Linting') {
+            steps {
+                echo 'Running linter...'
+                sh 'npm run lint'
+            }
+        }
+        stage('TEST: Supply chain Audit') {
+            steps {
+                sh 'npm audit --audit-level=high'
+            }
+        }
+        stage('TEST: Automated Unit Tests') {
+            steps {
+                echo 'Running unit test suite...'
+                sh 'npm test'
+            }
+        }
+        stage('DOCKER: Build & Package Artifact') {
+            steps {
+                echo "Building Docker image..."
+                sh "docker build -t $DOCKER_REPOUSER/$DOCKER_IMAGE:$IMAGE_TAG -t $DOCKER_REPOUSER/$DOCKER_IMAGE:$IMAGE_TAG ."
+            }
+        }
+        stage('DOCKER: Push to Registry') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh "echo \$DOCKER_PASS | docker login -u \$DOCKER_USER --password-stdin"
+                    sh "docker push $DOCKER_USER/$DOCKER_IMAGE:$IMAGE_TAG"
+                    sh "docker push $DOCKER_USER/$DOCKER_IMAGE:$IMAGE_TAG"
+                }
+            }
+        }
+    }
+    post {
+        always {
+            sh "docker rmi $DOCKER_REPOUSER/$DOCKER_IMAGE:$IMAGE_TAG || true"
+            sh "docker rmi $DOCKER_REPOUSER/$DOCKER_IMAGE:$IMAGE_TAG || true"
+        }
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed. Review logs for compilation or test issues.'
+        }
+    }
+}
