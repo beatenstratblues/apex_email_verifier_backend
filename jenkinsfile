@@ -6,11 +6,6 @@ pipeline {
         IMAGE_TAG=credentials('image-tag')
     }
     stages {
-        stage('Cleanup Workspace') {
-            steps {
-                cleanWs()
-            }
-        }
         stage('BUILD: Install Dependencies') {
             steps {
                 echo 'Installing dependencies using npm ci...'
