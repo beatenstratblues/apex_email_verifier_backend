@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    options {
+        deleteDir()
+    }
     environment {
         DOCKER_REPOUSER=credentials('docker-user')
         DOCKER_IMAGE=credentials('docker-image')
