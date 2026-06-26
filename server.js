@@ -5,7 +5,7 @@ const { verifyEmail } = require('./utils/verifier');
 const { logVerification, getStats, getRecentLogs } = require('./utils/logger');
 
 const app = express();
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8083;
 
 // Enable CORS for all domains as requested ("completely open")
 app.use(cors());
@@ -43,7 +43,7 @@ app.post('/api/verify', async (req, res) => {
 
   try {
     const report = await verifyEmail(trimmedEmail);
-    
+
     // Log the verification attempt (email & result)
     logVerification(ip, report.email, report.status, {
       syntax: report.isValidSyntax,
@@ -58,7 +58,7 @@ app.post('/api/verify', async (req, res) => {
     res.json(report);
   } catch (error) {
     console.error('Unhandled error during verification:', error);
-    
+
     // Log exception
     logVerification(ip, trimmedEmail, 'unknown', {
       error: error.message
