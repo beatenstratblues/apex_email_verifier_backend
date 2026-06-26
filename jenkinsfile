@@ -11,13 +11,6 @@ pipeline {
                 cleanWs()
             }
         }
-        stage('Source Pull') {
-            steps {
-                checkout changelog: false, 
-                poll: false, 
-                scm: scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/beatenstratblues/apex_email_verifier_backend']])
-            }
-        }
         stage('BUILD: Install Dependencies') {
             steps {
                 echo 'Installing dependencies using npm ci...'
