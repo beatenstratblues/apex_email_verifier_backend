@@ -76,7 +76,7 @@ app.get('/api/stats', async (req, res) => {
   try {
     const stats = await getStats();
     res.json(stats);
-  } catch (err) {
+  } catch {
     res.status(500).json({ error: 'Failed to retrieve stats' });
   }
 });
@@ -87,16 +87,16 @@ app.get('/api/logs', async (req, res) => {
   try {
     const logs = await getRecentLogs(limit);
     res.json(logs);
-  } catch (err) {
+  } catch {
     res.status(500).json({ error: 'Failed to retrieve logs' });
   }
 });
 
 // Start the server
 app.listen(PORT, () => {
-  console.log(`===============================================`);
+  console.log('===============================================');
   console.log(` Email Verifier Backend running on port ${PORT}`);
   console.log(` API Endpoint: http://localhost:${PORT}/api/verify`);
   console.log(` Health Check: http://localhost:${PORT}/api/health`);
-  console.log(`===============================================`);
+  console.log('===============================================');
 });

@@ -184,7 +184,7 @@ async function verifyEmail(email) {
   try {
     mxRecords = await dns.resolveMx(domain);
     result.hasMxRecords = mxRecords && mxRecords.length > 0;
-  } catch (err) {
+  } catch {
     result.hasMxRecords = false;
   }
 

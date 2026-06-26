@@ -59,7 +59,7 @@ function getRecentLogs(limit = 100) {
         .map(line => {
           try {
             return JSON.parse(line);
-          } catch (e) {
+          } catch {
             return null;
           }
         })
@@ -101,7 +101,7 @@ function getStats() {
           if (entry.status === 'deliverable') deliverable++;
           else if (entry.status === 'undeliverable') undeliverable++;
           else if (entry.status === 'risky') risky++;
-        } catch (e) {
+        } catch {
           // ignore malformed lines
         }
       });

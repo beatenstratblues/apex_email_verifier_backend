@@ -18,7 +18,7 @@ test.mock.method(dns, 'resolveMx', async (domain) => {
 });
 
 // Mock Net connection for SMTP
-test.mock.method(net, 'createConnection', (port, host) => {
+test.mock.method(net, 'createConnection', (_port, _host) => {
   const { EventEmitter } = require('events');
   const mockSocket = new EventEmitter();
   
