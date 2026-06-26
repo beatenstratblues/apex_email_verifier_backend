@@ -1,8 +1,5 @@
 pipeline {
     agent any
-    options {
-        deleteDir()
-    }
     environment {
         DOCKER_REPOUSER=credentials('docker-user')
         DOCKER_IMAGE=credentials('docker-image')
@@ -57,6 +54,7 @@ pipeline {
         always {
             sh "docker rmi $DOCKER_REPOUSER/$DOCKER_IMAGE:$IMAGE_TAG || true"
             sh "docker rmi $DOCKER_REPOUSER/$DOCKER_IMAGE:$IMAGE_TAG || true"
+            cleanWs()
         }
         success {
             echo 'Pipeline completed successfully!'
