@@ -1,3 +1,4 @@
+//This is the jenkins file for my project. It is used to build, test, and deploy the project using Jenkins. The pipeline is defined using the declarative syntax and includes stages for building, testing, and deploying the project. The pipeline also includes post actions to clean up the workspace and handle success or failure scenarios.
 pipeline {
     agent { label 'worker-node'}
     environment {
