@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent { label 'worker-node'}
     environment {
         DOCKER_REPOUSER=credentials('docker-user')
         DOCKER_IMAGE=credentials('docker-image')
