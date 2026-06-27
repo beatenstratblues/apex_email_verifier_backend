@@ -32,7 +32,7 @@ pipeline {
         }
         stage('DOCKER: Build & Package Artifact') {
             steps {
-                dockerPackage($DOCKER_REPOUSER, $DOCKER_IMAGE, $IMAGE_TAG)
+                dockerPackage(DOCKER_REPOUSER, DOCKER_IMAGE, IMAGE_TAG)
             }
         }
         stage('DOCKER: Push to Registry') {
