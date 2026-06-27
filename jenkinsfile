@@ -9,7 +9,9 @@ pipeline {
     }
     stages {
         stage('BUILD: Install Dependencies') {
-            installDependencies()
+            steps {
+                installDependencies()
+            }
         }
         stage('TEST: Linting') {
             steps {
